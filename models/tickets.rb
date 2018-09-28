@@ -32,4 +32,17 @@ class Ticket
     sql = 'DELETE FROM tickets WHERE id = $1'
     SqlRunner.run(sql,[@id])
   end
+
+  def self.all()
+    sql = 'SELECT * FROM tickets'
+    results = SqlRunner.run(sql)
+    return results.map do |result|
+      result
+    end
+  end
+
+  def find()
+    sql = 'SELECT * FROM tickets WHERE id = $1'
+    return SqlRunner.run(sql,[@id]).to_a
+  end
 end
