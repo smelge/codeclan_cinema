@@ -90,4 +90,12 @@ class Customer
     update()
     return p "Current Funds: #{@funds}"
   end
+
+  def bought()
+    sql = '
+      SELECT id FROM tickets WHERE customer_id = $1
+    '
+    total = SqlRunner.run(sql,[@id]).count
+    p "This customer has bought #{total} tickets."
+  end
 end

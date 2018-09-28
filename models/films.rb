@@ -73,4 +73,9 @@ class Film
     results = SqlRunner.run(sql,[@id])
     return results.map{|result| result['name']}
   end
+
+  def viewcount()
+    total = self.viewers.count
+    p "#{total} people have booked this film"
+  end
 end
