@@ -45,4 +45,6 @@ class Ticket
     sql = 'SELECT * FROM tickets WHERE id = $1'
     return SqlRunner.run(sql,[@id]).to_a
   end
+
+  
 end
