@@ -61,7 +61,7 @@ class Customer
   def films()
     # What films this guy is watching
     sql = '
-    SELECT customers.name,films.title
+    SELECT customers.name,films.title,films.price
     FROM customers
     INNER JOIN tickets
     ON customers.id = tickets.customer_id
@@ -72,5 +72,22 @@ class Customer
 
     results = SqlRunner.run(sql,[@id])
     return results.map{|result| result['title']}
+  end
+
+  def buy(film_id)
+    # Customer is buying tickets. Require ID of movie
+    sql = '
+    INSERT INTO tickets
+    (customer_id,film_id)
+    VALUES
+    ($1,$2)
+    '
+    SqlRunner.run(sql,[@id,film_id])
+
+    sql = 'SELECT price FROM films WHERE id = $1'
+    results = SqlRunner.run(sql,[film_id])
+    @funds -= results[0]['price'].to_i
+    update()
+    return p "Current Funds: #{@funds}"
   end
 end
