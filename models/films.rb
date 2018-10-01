@@ -5,12 +5,14 @@ require_relative('../db/sql_runner.rb')
 
 class Film
   attr_reader :id
-  attr_accessor :title,:price
+  attr_accessor :title,:price,:showings,:tickets
 
   def initialize(options)
     @id = options['id'].to_i
     @title = options['title']
     @price = options['price'].to_i
+    @showings = options['showings']
+    @tickets = options['tickets'].to_i
   end
 
   def save()
@@ -22,6 +24,20 @@ class Film
     RETURNING id'
     result = SqlRunner.run(sql,[@title,@price])
     @id = result[0]['id'].to_i
+
+
+    @showings.each do |showtime|
+      update_id = @id.to_i
+      # p "Film Id: #{@id} | Show time: #{showtime} | Tickets: #{@tickets}"
+      # p "============================="
+      sql = '
+        INSERT INTO screenings
+        (film_id,screening,ticket_no)
+        VALUES ($1,$2,$3)
+      '
+      # binding.pry
+      SqlRunner.run(sql,[update_id,showtime,@tickets])
+    end
   end
 
   def self.delete_all
@@ -77,5 +93,9 @@ class Film
   def viewcount()
     total = self.viewers.count
     p "#{total} people have booked this film"
+  end
+
+  def popular()
+    # sql = 
   end
 end
